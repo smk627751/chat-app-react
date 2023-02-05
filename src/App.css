@@ -1,38 +1,241 @@
-.App {
-  text-align: center;
+*
+{
+    margin: 0px;
+    padding: 0px;
+    --bgColor:#fff;
+    --header: #efefef;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+body
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+}
+section
+{
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100vw;
+    min-height: 100vh;
+    background-color: var(--bgColor);
+    z-index: -1;
+}
+header
+{
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    width: 100%;
+    height: 50px;
+    background-color: var(--header);
+    z-index: 1;
+}
+.heading
+{
+    margin: 5px;
+}
+.container
+{
+    position: absolute;
+    top: 50px;
+    left: 0px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-direction: column;
+    width: 100vw;
+    height: 540px;
+    gap: 5px;
+    overflow-y: scroll;
+    scroll-behavior: smooth;
+}
+.container::-webkit-scrollbar
+{
+    width: 0px;
+}
+.bubble
+{
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-width: 30px;
+    flex-direction: column;
+    border-radius: 30px;
+    padding: 20px;
+    margin-bottom: 5px;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.bubble::before,.bubble::after
+{
+    position: absolute;
+    opacity: 70%;
+    font-size: 0.5em;
+    align-self: start;
+    z-index: -1;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+.bubble::before
+{
+    content: attr(data-user);
+    top: 5px;
+    left: 22px;
+    font-size: 0.6em;
 }
 
-.App-link {
-  color: #61dafb;
+.bubble::after
+{
+    content: attr(data-time);
+    bottom: 8px;
+    right: 15px;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+
+.sent
+{
+    align-self: end;
+    margin-right: 5%;
+    color: #000;
+    background-color: #efefef;
+    animation: send 0.25s forwards;
+}
+
+@keyframes send
+{
+    0%
+    {
+        translate: 50px 0px;
+        transform:scale(0);
+    }
+    100%
+    {
+        translate: 0px 0px;
+        transform:scale(1);
+    }
+}
+
+.received
+{
+    align-self: start;
+    margin-left: 2.5%;
+    color: #fff;
+    background-color: rgb(145, 5, 169);
+    animation: receive 0.25s forwards;
+}
+
+@keyframes receive
+{
+    0%
+    {
+        translate: -50px 0px;
+        transform:scale(0);
+    }
+    100%
+    {
+        translate: 0px 0px;
+        transform:scale(1);
+    }
+}
+
+.inputBox
+{
+    position: absolute;
+    left: -10px;
+    bottom: 0px;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 60px;
+    background-color: var(--bgColor);
+    gap: 5px;
+}
+
+.textBox
+{
+    width: 80%;
+    padding: 15px;
+    font-size: 1em;
+    outline: none;
+    border: 1px solid rgb(145, 5, 169,0.25);
+    border-radius: 50px;
+}
+
+.textBox::placeholder
+{
+   opacity: 50%;
+}
+input[type="file"]
+{
+    display: none;
+}
+.icon
+{
+    fill: rgb(145, 5, 169);
+    width: 30px;
+    object-fit: contain;
+    background-color: #efefef;
+    padding: 10px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+.icon:hover
+{
+    filter: brightness(0.8);
+}
+.submitBtn
+{
+    width: 100px;
+    height: 50px;
+    border: none;
+    border-radius: 50px;
+    color: #fff;
+    background-color: rgb(145, 5, 169);
+    cursor: pointer;
+}
+
+.submitBtn:hover
+{
+    filter: brightness(0.8);
+}
+
+.login
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding: 5px;
+    gap: 10px;
+}
+
+.toast
+{
+    opacity: 75%;
+}
+
+.imgtag
+{
+    width: 200px;
+    object-fit: contain;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.imgtag:hover
+{
+    filter: brightness(0.8);
+}
+.atag
+{
+    color: inherit;
 }
