@@ -148,8 +148,8 @@ function App() {
         :<>
           <form className='login' onSubmit={login}>
             <h3>Join Room</h3>
-            <input ref={name} type='text' className='textBox' placeholder='Enter your name' required></input>
-            <input type="submit" value="Start Chat" className='submitBtn'></input>
+            <input ref={name} type='text' className='textBox' placeholder='Enter your name' required/>
+            <input type="submit" value="Start Chat" className='submitBtn'/>
           </form>
         </>}
         <section></section>  
