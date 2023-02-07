@@ -65,7 +65,7 @@ function Chat(props) {
       img.src = res
       img.onload = () =>{
         let canvas = document.createElement('canvas')
-        const width = 200
+        const width = 400
         let ratio = width / img.width
         canvas.width = width
         canvas.height = img.height * ratio
@@ -73,7 +73,7 @@ function Chat(props) {
         const context = canvas.getContext('2d')
         context.drawImage(img,0,0,canvas.width,canvas.height)
         const new_url = context.canvas.toDataURL(img,"image/jpeg",80)
-        socket.emit("send-message",new_url,User)
+        socket.emit("send-message",new_url,User,room)
         appendMessage(new_url,"sent","")
         file.current.value = ''
       }
