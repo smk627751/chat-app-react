@@ -65,7 +65,7 @@ function Chat(props) {
       img.src = res
       img.onload = () =>{
         let canvas = document.createElement('canvas')
-        const width = 400
+        const width = 200
         let ratio = width / img.width
         canvas.width = width
         canvas.height = img.height * ratio
