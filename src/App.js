@@ -3,8 +3,8 @@ import io from 'socket.io-client'
 import Home from './components/home'
 import Login from './components/login'
 
-const endpoint = "http://localhost:5000" // if we run th server in local host
-// const endpoint = "https://chat-app-server-uagt.onrender.com"
+// const endpoint = "http://localhost:5000" // if we run th server in local host
+const endpoint = "https://chat-app-server-uagt.onrender.com"
 const socket = io.connect(endpoint)
 
 function App() {
