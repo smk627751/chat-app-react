@@ -1,35 +1,18 @@
 import {useEffect, useRef, useState} from 'react'
+import { BsChevronLeft,BsFillImageFill, BsFillSendFill } from "react-icons/bs"
 
-function Chat(props) {
-  const socket = props.socket
+function Chat({socket,user,from,room,currentRoom,setCurrentroom,chats}) {
   const input = useRef()
   const container = useRef()
   const file = useRef()
-  const [User,setUser] = useState('')
-  const [room,setRoom] = useState('')
-  useEffect(()=>{
-    setRoom(props.room)
-    setUser(props.user)
-    socket.on("receive-message",(data,user) =>{
-      appendMessage(data,"received",user)
-    })
-
-    socket.on("user-joined",user => {
-      userJoinned(user)
-    })
-
-    socket.on("user-left",user => {
-      userLeft(user)
-    })
-
-  },[props,socket])
 
   const send = (e)=>{
     e.preventDefault()
+    let timeStamp = new Date()
     if(input.current.value !== '')
     {
-      socket.emit("send-message",input.current.value,User,room)
-      appendMessage(input.current.value,"sent","")
+      socket.emit("send-message",{message:input.current.value,timeStamp},user,from,room)
+      appendMessage({message:input.current.value,timeStamp},"sent","")
       input.current.value = ''
     }
   }
@@ -73,30 +56,31 @@ function Chat(props) {
         const context = canvas.getContext('2d')
         context.drawImage(img,0,0,canvas.width,canvas.height)
         const new_url = context.canvas.toDataURL(img,"image/jpeg",80)
-        socket.emit("send-message",new_url,User,room)
-        appendMessage(new_url,"sent","")
+        let timeStamp = new Date()
+        socket.emit("send-message",{message:new_url,timeStamp},user,from,room)
+        appendMessage({message:new_url,timeStamp},"sent","")
         file.current.value = ''
       }
     }
   }
   const appendMessage = (data,className,user) => {
     const msg = document.createElement('p')
-    if(data.includes('data:image'))
+    if(data.message.includes('data:image'))
     {
       const image = document.createElement('img')
-      image.src = data
+      image.src = data.message
       image.className = 'imgtag'
       msg.appendChild(image)
       const atag = document.createElement('a')
-      atag.setAttribute('href',data)
+      atag.setAttribute('href',data.message)
       atag.target = '_blank'
       msg.appendChild(atag)
       image.onclick = () => atag.click()
     }
-    else if(data.includes('http'))
+    else if(data.message.includes('http'))
     {
       const aTag = document.createElement('a')
-      aTag.href = data
+      aTag.href = data.message
       aTag.target = '_blank'
       aTag.innerText = data
       aTag.className = 'atag'
@@ -104,12 +88,12 @@ function Chat(props) {
     }
     else
     {
-      msg.innerText = data
+      msg.innerText = data.message
     }
     msg.className = "bubble"
     msg.classList.add(className)
-    msg.setAttribute('data-user',user)
-    let time = new Date()
+    // msg.setAttribute('data-user',user)
+    let time = Date.parse(data.timeStamp)
     let f = new Intl.DateTimeFormat(('en-US'),{
       timeStyle:'short'
     })
@@ -118,18 +102,65 @@ function Chat(props) {
     msg.scrollIntoView()
   }
 
+  useEffect(() => {
+    container.current.innerHTML=""
+    chats.map(chat => {
+      if((from === chat.from && currentRoom.room === chat.room)||(from === chat.room && currentRoom.room === chat.from))
+      {
+        if(chat.user === user)
+        {
+          appendMessage(chat.data,"sent","")
+        }
+        else
+        {
+          appendMessage(chat.data,"received",chat.user)
+        }
+      }
+    })
+
+  },[chats])
+
+  useEffect(()=>{
+
+    socket.on("receive-message",(data,user) =>{
+      appendMessage(data,"received",user)
+    })
+
+    socket.on("user-joined",user => {
+      userJoinned(user)
+    })
+
+    socket.on("user-left",user => {
+      userLeft(user)
+    })
+
+  },[socket])
+
   return (
     <>
-        <header><span className='heading'>Chat Room</span></header>
+      <div className={`chatPage ${currentRoom?'':"hide"}`}>
+        <header>
+          <div className='back' onClick={() => setCurrentroom('')}>
+            <BsChevronLeft/>
+          </div>
+          <div className='img'>
+                <img src={currentRoom?.photoURL} alt='avatar'/>
+          </div>
+          <div className='details'>
+                <span>{currentRoom?.user}<>{currentRoom?.user === user? " (You)":''}</></span>
+                <span>{currentRoom?.room}</span>
+              </div>
+        </header>
         <div ref={container} className='container'></div>
         <form className='inputBox' onSubmit={send}>
           <input ref={input} className='textBox' placeholder='say hi👋..'/>
-          <input ref={file} type='file'onChange={uploadfile} accept='.jpg'/>
-          <svg viewBox="0 0 24 24" className='icon' onClick={open}>
-            <path d="M3,22H21a1,1,0,0,0,1-1V3a1,1,0,0,0-1-1H3A1,1,0,0,0,2,3V21A1,1,0,0,0,3,22Zm2.414-2L10,15.414l1.293,1.293a1,1,0,0,0,1.414,0L17,12.414l3,3V20ZM20,4v8.586l-2.293-2.293a1,1,0,0,0-1.414,0L12,14.586l-1.293-1.293a1,1,0,0,0-1.414,0L4,18.586V4ZM6,8.5A2.5,2.5,0,1,1,8.5,11,2.5,2.5,0,0,1,6,8.5Z"/>
-          </svg>
-          <input type="submit" value="Send" className='submitBtn'/>
+          {/* <input ref={file} type='file'onChange={uploadfile} accept=".jpg, .png, .gif"/>
+          <div className='icon'>
+            <BsFillImageFill onClick={open}/>
+          </div> */}
+          <button className='submitBtn' style={{minWidth:'50px'}}><BsFillSendFill/></button>
         </form>
+      </div>
     </>
   );
 }
