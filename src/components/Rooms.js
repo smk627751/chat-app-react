@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import {BsThreeDotsVertical,BsBoxArrowInRight, BsChatLeftTextFill} from 'react-icons/bs'
-function Rooms({setDarkmode,socket,user,setRoom,setCurrentroom,rooms}){
+function Rooms({setDarkmode,setChat,socket,user,setRoom,setCurrentroom,rooms}){
     const [menu,setMenu] = useState(false)
     const jsonObj = rooms.map(JSON.stringify)
     rooms = new Set(jsonObj)
@@ -25,7 +25,12 @@ function Rooms({setDarkmode,socket,user,setRoom,setCurrentroom,rooms}){
                         </div>
                         <div>
                             <label htmlFor='logout'>Logout</label>
-                            <span id='logout'><BsBoxArrowInRight/></span>
+                            <span id='logout' onClick={() =>{
+                                localStorage.removeItem("credentials")
+                                setChat(false)
+                            }}>
+                                <BsBoxArrowInRight/>
+                            </span>
                         </div>
                     </div>}
                 </div>

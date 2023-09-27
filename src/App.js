@@ -48,7 +48,7 @@ function App() {
   return (
     <>
       {chat ?
-         <Home darkMode={darkMode} setDarkmode={setDarkmode} socket={socket} user={user} from={from} room={room} setRoom={setRoom} rooms={rooms}/>
+         <Home darkMode={darkMode} setDarkmode={setDarkmode} setChat={setChat} socket={socket} user={user} from={from} room={room} setRoom={setRoom} rooms={rooms}/>
         :<Login socket ={socket} setPhoto={setPhoto} setUser={setUser} setFrom={setFrom} setRoom={setRoom} setChat={setChat}/>}  
     </>
   );
