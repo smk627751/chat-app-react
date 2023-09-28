@@ -26,7 +26,7 @@ html
     --bubble:rgb(145, 5, 169);
     --select:var(--bubble);
     --fontColor:#000;
-    --borderColor:#fff;
+    --borderColor:rgba(0,0,0,0.1);
     box-sizing: border-box;
 }
 
@@ -37,7 +37,7 @@ html
     --bubble:rgb(145, 5, 169);
     --select:var(--bubble);
     --fontColor:#fff;
-    --borderColor:rgba(0,0,0,0.2);
+    --borderColor:rgba(255,255,255,0.2);
 }
 
 body

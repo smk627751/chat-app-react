@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import {BsThreeDotsVertical,BsBoxArrowInRight, BsChatLeftTextFill} from 'react-icons/bs'
-function Rooms({setDarkmode,setChat,socket,user,setRoom,setCurrentroom,rooms}){
+import {BsMoon,BsSun,BsThreeDotsVertical,BsBoxArrowInRight, BsChatLeftTextFill} from 'react-icons/bs'
+function Rooms({darkMode,setDarkmode,setChat,socket,user,setRoom,setCurrentroom,rooms}){
     const [menu,setMenu] = useState(false)
     const jsonObj = rooms.map(JSON.stringify)
     rooms = new Set(jsonObj)
@@ -17,10 +17,10 @@ function Rooms({setDarkmode,setChat,socket,user,setRoom,setCurrentroom,rooms}){
                         <BsThreeDotsVertical/>
                     </div>
                     {menu && <div className='menu'>
-                        <div>
-                            <label htmlFor='checkBox'>Dark Mode</label>
-                            <span>
-                                <input type='checkbox' id="checkBox" className='checkbox' onChange={() => setDarkmode(prev => (!prev))}/>
+                        <div onClick={() => setDarkmode(prev => (!prev))}>
+                            <label htmlFor='switch'>{darkMode?"Light Mode":"Dark Mode"}</label>
+                            <span id='switch'>
+                                {darkMode?<BsSun/>:<BsMoon/>}
                             </span>
                         </div>
                         <div>
@@ -45,8 +45,8 @@ function Rooms({setDarkmode,setChat,socket,user,setRoom,setCurrentroom,rooms}){
                             <img src={room?.photoURL} alt="avatar"/>
                         </div>
                         <div className='details'>
-                            <span>{room?.user}<>{room?.user === user? "(You)":''}</></span>
-                            <span>{room?.room}</span>
+                            <span style={{fontWeight:'500'}}>{room?.user}<>{room?.user === user?" (You)":''}</></span>
+                            <span style={{fontSize:'0.85rem', opacity:"80%"}}>{room?.room}</span>
                         </div>
                         </div>
                 })}

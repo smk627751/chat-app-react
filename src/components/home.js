@@ -14,7 +14,7 @@ function Home({darkMode,setDarkmode,setChat,socket,user,from,room,setRoom,rooms}
     return(
         <>
             <div className={`home ${darkMode ?"dark" :""}`}>
-                <Rooms setDarkmode={setDarkmode} setChat={setChat} socket={socket} user={user} setRoom={setRoom} setCurrentroom={setCurrentroom} rooms={rooms}/>
+                <Rooms darkMode ={darkMode} setDarkmode={setDarkmode} setChat={setChat} socket={socket} user={user} setRoom={setRoom} setCurrentroom={setCurrentroom} rooms={rooms}/>
                 <Chat socket={socket} user={user} from={from} room={room} currentRoom={currentRoom} setCurrentroom={setCurrentroom} chats={chats}/>
                 <section></section>
             </div>
