@@ -1,10 +1,11 @@
 import {useEffect, useRef, useState} from 'react'
 import { BsChevronLeft,BsFillImageFill, BsFillSendFill } from "react-icons/bs"
 
-function Chat({socket,user,from,room,currentRoom,setCurrentroom,chats}) {
+function Chat({setStore,socket,user,from,room,currentRoom,setCurrentroom,chats}) {
   const input = useRef()
   const container = useRef()
   const file = useRef()
+  const [active,setActive] = useState(false)
 
   const send = (e)=>{
     e.preventDefault()
@@ -17,23 +18,6 @@ function Chat({socket,user,from,room,currentRoom,setCurrentroom,chats}) {
     }
   }
 
-  const userJoinned = user =>{
-    let toast = document.createElement('span')
-    toast.innerText = `${user} joinned the chat`
-    toast.className = "toast"
-    if(container !== ''|| container !== '')
-    container.current.append(toast)
-    toast.scrollIntoView()
-  }
-
-  const userLeft = user =>{
-    let toast = document.createElement('span')
-    toast.innerText = `${user} Left the chat`
-    toast.className = "toast"
-    if(container !== ''|| container !== '')
-    container.current.append(toast)
-    toast.scrollIntoView()
-  }
   const open = () =>{
     file.current.click()
   }
@@ -126,25 +110,21 @@ function Chat({socket,user,from,room,currentRoom,setCurrentroom,chats}) {
       appendMessage(data,"received",user)
     })
 
-    socket.on("user-joined",user => {
-      userJoinned(user)
-    })
-
-    socket.on("user-left",user => {
-      userLeft(user)
-    })
-
   },[socket])
 
   return (
     <>
       <div className={`chatPage ${currentRoom?'':"hide"}`}>
         <header>
-          <div className='back' onClick={() => setCurrentroom('')}>
+          <div className='back' onClick={() => {
+            setCurrentroom('')
+            setStore(true)
+            }}>
             <BsChevronLeft/>
           </div>
           <div className='img'>
                 <img src={currentRoom?.photoURL} alt='avatar'/>
+                {active && <div>active</div>}
           </div>
           <div className='details'>
                 <span>{currentRoom?.user}<>{currentRoom?.user === user? " (You)":''}</></span>

@@ -2,8 +2,9 @@ import { useEffect, useState } from "react";
 import Rooms from "./Rooms";
 import Chat from "./Chat";
 
-function Home({darkMode,setDarkmode,setChat,socket,user,from,room,setRoom,rooms}){
+function Home({darkMode,setDarkmode,setChat,socket,activeUsers,user,from,room,setRoom,rooms}){
     const [currentRoom,setCurrentroom] = useState('')
+    const [storeNotification,setStore] = useState(true);
     const [chats,setChats] = useState([])
     useEffect(() => {
         socket.on("set-message",(chats) =>{
@@ -14,8 +15,8 @@ function Home({darkMode,setDarkmode,setChat,socket,user,from,room,setRoom,rooms}
     return(
         <>
             <div className={`home ${darkMode ?"dark" :""}`}>
-                <Rooms darkMode ={darkMode} setDarkmode={setDarkmode} setChat={setChat} socket={socket} user={user} setRoom={setRoom} setCurrentroom={setCurrentroom} rooms={rooms}/>
-                <Chat socket={socket} user={user} from={from} room={room} currentRoom={currentRoom} setCurrentroom={setCurrentroom} chats={chats}/>
+                <Rooms storeNotification={storeNotification} setStore ={setStore} darkMode ={darkMode} setDarkmode={setDarkmode} setChat={setChat} socket={socket} activeUsers={activeUsers} user={user} setRoom={setRoom} setCurrentroom={setCurrentroom} rooms={rooms}/>
+                <Chat setStore ={setStore} socket={socket} user={user} from={from} room={room} currentRoom={currentRoom} setCurrentroom={setCurrentroom} chats={chats}/>
                 <section></section>
             </div>
         </>
