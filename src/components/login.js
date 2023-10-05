@@ -1,8 +1,9 @@
+import { useEffect } from "react"
 import { googleSignIn } from "./firebase"
 import { IoLogoGoogle } from "react-icons/io"
 
-function Login({socket,setPhoto,setUser,setFrom,setChat}) {
-
+function Login({peerId,socket,setPhoto,setUser,setFrom,setChat}) {
+  
   const login = async (e) => {
     e.preventDefault()
     const {user} = await googleSignIn()

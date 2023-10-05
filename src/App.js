@@ -1,11 +1,13 @@
 import {useEffect, useState} from 'react'
+import {Peer} from 'peerjs'
 import io from 'socket.io-client'
 import Home from './components/home'
 import Login from './components/login'
 
-// const endpoint = "http://localhost:5000" // if we run th server in local host
-const endpoint = "https://chat-app-server-uagt.onrender.com"
+const endpoint = "http://localhost:5000" // if we run th server in local host
+// const endpoint = "https://chat-app-server-uagt.onrender.com"
 const socket = io.connect(endpoint)
+const peer = new Peer()
 
 function App() {
 
@@ -14,9 +16,17 @@ function App() {
   const [from,setFrom] = useState('')
   const [room,setRoom] = useState('')
   const [rooms,setRooms] = useState([])
+  const [peerId,setPeerId] = useState('')
   const [activeUsers,setActive] = useState([])
   const [chat,setChat] = useState(false)
   const [darkMode,setDarkmode] = useState(false)
+
+  useEffect(() => {
+    peer.on('open',(id) => {
+      setPeerId(id)
+      console.log(`my ID ${id}`)
+    })
+  },[])
 
   useEffect(() => {
     socket.on("rooms",(Rooms) => {
@@ -52,7 +62,7 @@ function App() {
       darkMode = JSON.parse(darkMode)
       setDarkmode(darkMode)
     }
-  },[user,from,chat])
+  },[user,from,chat,peerId])
 
   useEffect(() => {
 
@@ -72,8 +82,8 @@ function App() {
   return (
     <>
       {chat ?
-         <Home darkMode={darkMode} setDarkmode={setDarkmode} setChat={setChat} socket={socket} activeUsers={activeUsers} user={user} from={from} room={room} setRoom={setRoom} rooms={rooms}/>
-        :<Login socket ={socket} setPhoto={setPhoto} setUser={setUser} setFrom={setFrom} setRoom={setRoom} setChat={setChat}/>}  
+         <Home peer={peer} peerId={peerId} darkMode={darkMode} setDarkmode={setDarkmode} setChat={setChat} socket={socket} activeUsers={activeUsers} user={user} from={from} room={room} setRoom={setRoom} rooms={rooms}/>
+        :<Login peerId={peerId} socket ={socket} setPhoto={setPhoto} setUser={setUser} setFrom={setFrom} setRoom={setRoom} setChat={setChat}/>}  
     </>
   );
 }

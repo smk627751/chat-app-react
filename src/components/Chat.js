@@ -1,12 +1,14 @@
 import {useEffect, useRef, useState} from 'react'
-import { BsChevronLeft,BsFillImageFill, BsFillSendFill } from "react-icons/bs"
+import { BsTelephone,BsChevronLeft,BsFillImageFill, BsFillSendFill } from "react-icons/bs"
+import Video from './video'
 
-function Chat({setStore,socket,user,from,room,currentRoom,setCurrentroom,chats}) {
+function Chat({peer,peerId,setStore,socket,user,from,room,currentRoom,setCurrentroom,chats}) {
   const input = useRef()
   const container = useRef()
   const file = useRef()
   const [active,setActive] = useState(false)
-
+  const [call,setCall] = useState(false)
+  const [remotePeerId,setRemoteId] = useState('')
   const send = (e)=>{
     e.preventDefault()
     let timeStamp = new Date()
@@ -104,6 +106,20 @@ function Chat({setStore,socket,user,from,room,currentRoom,setCurrentroom,chats})
 
   },[chats])
 
+  useEffect(() => {
+    // console.log("my room: "+room)
+    socket.on("send-peer",() => {
+      setCall(true)
+      socket.emit("remote-peer",{peerId,room})
+    })
+
+    socket.on("receive-peerId",(id) => {
+      setRemoteId(id)
+      console.log(`Remote ID ${id}`)
+    })
+    
+  },[peerId,room])
+
   useEffect(()=>{
 
     socket.on("receive-message",(data,user) =>{
@@ -114,6 +130,9 @@ function Chat({setStore,socket,user,from,room,currentRoom,setCurrentroom,chats})
 
   return (
     <>
+      {call && <div className='video'>
+        <Video setCall={setCall} peer={peer} remotePeerId={remotePeerId}/>
+      </div>}
       <div className={`chatPage ${currentRoom?'':"hide"}`}>
         <header>
           <div className='back' onClick={() => {
@@ -129,7 +148,13 @@ function Chat({setStore,socket,user,from,room,currentRoom,setCurrentroom,chats})
           <div className='details'>
                 <span>{currentRoom?.user}<>{currentRoom?.user === user? " (You)":''}</></span>
                 <span>{currentRoom?.room}</span>
-              </div>
+          </div>
+          <div className='phone' onClick={() => {
+            setCall(prev => (!prev))
+            socket.emit("get-peer",room)
+          }}>
+            <BsTelephone/>
+          </div>
         </header>
         <div ref={container} className='container'></div>
         <form className='inputBox' onSubmit={send}>
