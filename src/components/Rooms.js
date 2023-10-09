@@ -7,31 +7,32 @@ function Rooms({storeNotification,setStore,darkMode,setDarkmode,setChat,socket,a
     rooms = Array.from(rooms).map(JSON.parse)
     const [notifications,setNotify] = useState({})
     
-    const notify = (data,user) => {
+    const notify = (data,photoURL,user) => {
         if (!("Notification" in window)) {
           console.log("Browser does not support desktop notification");
         } 
-        else if(Notification.permission === "granted")
-        {
-            const notification = new Notification(`${user} : ${data.message}`)
-        }
-        else if(Notification.permission === "denied"){
+        else{
           Notification.requestPermission().then(permission => {
                 if(permission === "granted")
                 {
-                    const notification = new Notification(`${user} : ${data.message}`)
+                    const notification = new Notification(`${user}`,{
+                        icon:photoURL,
+                        body:data.message,
+                        timestamp:data.timestamp,
+                        tag:user,
+                    })
                 }
           })
         }
       }
 
     useEffect(() => {
-        socket.on("notify-message",(data,user) => {
+        socket.on("notify-message",(data,photoURL,user) => {
             if(storeNotification)
             {
                 setNotify((prev) => ({...prev,[user]:data}))
             }
-            notify(data,user)
+            notify(data,photoURL,user)
         })
       },[socket])
 

@@ -82,8 +82,28 @@ function App() {
   return (
     <>
       {chat ?
-         <Home peer={peer} peerId={peerId} darkMode={darkMode} setDarkmode={setDarkmode} setChat={setChat} socket={socket} activeUsers={activeUsers} user={user} from={from} room={room} setRoom={setRoom} rooms={rooms}/>
-        :<Login peerId={peerId} socket ={socket} setPhoto={setPhoto} setUser={setUser} setFrom={setFrom} setRoom={setRoom} setChat={setChat}/>}  
+         <Home 
+         peer={peer} 
+         peerId={peerId} 
+         darkMode={darkMode} 
+         setDarkmode={setDarkmode} 
+         setChat={setChat} 
+         socket={socket} 
+         activeUsers={activeUsers} 
+         photoURL={photoURL} 
+         user={user} 
+         from={from} 
+         room={room} 
+         setRoom={setRoom} 
+         rooms={rooms}/>
+        :<Login 
+        peerId={peerId} 
+        socket ={socket} 
+        setPhoto={setPhoto} 
+        setUser={setUser} 
+        setFrom={setFrom} 
+        setRoom={setRoom} 
+        setChat={setChat}/>}  
     </>
   );
 }

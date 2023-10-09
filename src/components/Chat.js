@@ -2,7 +2,7 @@ import {useEffect, useRef, useState} from 'react'
 import { BsTelephone,BsChevronLeft,BsFillImageFill, BsFillSendFill } from "react-icons/bs"
 import Video from './video'
 
-function Chat({peer,peerId,setStore,socket,user,from,room,currentRoom,setCurrentroom,chats}) {
+function Chat({peer,peerId,setStore,socket,photoURL,user,from,room,currentRoom,setCurrentroom,chats}) {
   const input = useRef()
   const container = useRef()
   const file = useRef()
@@ -14,7 +14,7 @@ function Chat({peer,peerId,setStore,socket,user,from,room,currentRoom,setCurrent
     let timeStamp = new Date()
     if(input.current.value !== '')
     {
-      socket.emit("send-message",{message:input.current.value,timeStamp},user,from,room)
+      socket.emit("send-message",{message:input.current.value,timeStamp},photoURL,user,from,room)
       appendMessage({message:input.current.value,timeStamp},"sent","")
       input.current.value = ''
     }
@@ -68,7 +68,7 @@ function Chat({peer,peerId,setStore,socket,user,from,room,currentRoom,setCurrent
       const aTag = document.createElement('a')
       aTag.href = data.message
       aTag.target = '_blank'
-      aTag.innerText = data
+      aTag.innerText = data.message
       aTag.className = 'atag'
       msg.appendChild(aTag)
     }
@@ -108,9 +108,9 @@ function Chat({peer,peerId,setStore,socket,user,from,room,currentRoom,setCurrent
 
   useEffect(() => {
     // console.log("my room: "+room)
-    socket.on("send-peer",() => {
+    socket.on("send-peer",(from) => {
       setCall(true)
-      socket.emit("remote-peer",{peerId,room})
+      socket.emit("remote-peer",{peerId,from})
     })
 
     socket.on("receive-peerId",(id) => {
@@ -151,7 +151,7 @@ function Chat({peer,peerId,setStore,socket,user,from,room,currentRoom,setCurrent
           </div>
           <div className='phone' onClick={() => {
             setCall(prev => (!prev))
-            socket.emit("get-peer",room)
+            socket.emit("get-peer",{from,room})
           }}>
             <BsTelephone/>
           </div>

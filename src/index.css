@@ -434,7 +434,7 @@ input[type="file"]
     aspect-ratio: 1/1;
     font-size: 1.5rem;
     color: var(--select);
-    background-color: #efefef;
+    background-color: var(--header);
     padding: 10px;
     border-radius: 50%;
     cursor: pointer;
